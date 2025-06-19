@@ -1,6 +1,5 @@
 package com.system.icae02.controller;
 
-import java.awt.print.Book;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.system.icae02.service.BookService;
-
+import com.system.icae02.model.Student;
+import com.system.icae02.service.StudentService;
 
 @RestController
-@RequestMapping("/books")
-public class BookController {
+@RequestMapping("/students")
+public class StudentController {
     @Autowired
-    public BookService bookService;
+    public StudentService studentService;
 
-    @GetMapping("/{genre}")
-    public ResponseEntity<List<Book>> getBooksByGenre(@PathVariable("genre") String genre){
-        return new ResponseEntity<List<Book>>(bookService.getBooksByGenre(genre),HttpStatus.OK); 
+    @GetMapping("/{bookId}")
+    public ResponseEntity<List<Student>> getBorrowedStudents(@PathVariable("bookId") String bookId) {
+        return new ResponseEntity<List<Student>>(studentService.getBorrowedStudent(bookId),HttpStatus.OK);
     }
 }
