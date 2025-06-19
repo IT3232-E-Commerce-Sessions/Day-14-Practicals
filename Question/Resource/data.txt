@@ -1,0 +1,38 @@
+-- Insert 10 Books
+INSERT INTO book (id, title, author, genre, isbn, published_date, copies_available) VALUES
+('B001', 'The Silent Patient', 'Alex Michaelides', 'Thriller', '9781250301697', '2019-02-05', 5),
+('B002', 'Educated', 'Tara Westover', 'Memoir', '9780399590504', '2018-02-20', 3),
+('B003', 'Becoming', 'Michelle Obama', 'Biography', '9781524763138', '2018-11-13', 4),
+('B004', 'The Alchemist', 'Paulo Coelho', 'Fiction', '9780061122415', '1993-05-01', 2),
+('B005', 'Atomic Habits', 'James Clear', 'Self-help', '9780735211292', '2018-10-16', 6),
+('B006', 'Sapiens', 'Yuval Noah Harari', 'History', '9780062316097', '2015-02-10', 7),
+('B007', 'The Subtle Art of Not Giving a F*ck', 'Mark Manson', 'Self-help', '9780062457714', '2016-09-13', 3),
+('B008', '1984', 'George Orwell', 'Dystopian', '9780451524935', '1950-07-01', 4),
+('B009', 'To Kill a Mockingbird', 'Harper Lee', 'Fiction', '9780060935467', '1960-07-11', 5),
+('B010', 'The Great Gatsby', 'F. Scott Fitzgerald', 'Classic', '9780743273565', '1925-04-10', 2);
+
+-- Insert 5 Students
+INSERT INTO student (id, name, department, year) VALUES
+('S001', 'Alice Johnson', 'Computer Science', 2),
+('S002', 'Bob Smith', 'Mechanical Engineering', 3),
+('S003', 'Clara Lee', 'Physics', 1),
+('S004', 'David Kim', 'Mathematics', 4),
+('S005', 'Emma Davis', 'Literature', 2);
+
+-- Insert 15 Borrow Records
+INSERT INTO borrow (id, book_id, student_id, borrow_date, return_date, returned) VALUES
+(1, 'B001', 'S001', '2025-06-01', NULL, 'NO'),
+(2, 'B002', 'S002', '2025-05-15', '2025-05-29', 'YES'),
+(3, 'B003', 'S003', '2025-06-05', NULL, 'NO'),
+(4, 'B004', 'S001', '2025-04-20', '2025-05-05', 'YES'),
+(5, 'B005', 'S005', '2025-06-02', NULL, 'NO'),
+(6, 'B006', 'S004', '2025-05-10', '2025-05-25', 'YES'),
+(7, 'B007', 'S001', '2025-05-28', NULL, 'NO'),
+(8, 'B008', 'S002', '2025-05-01', '2025-05-20', 'YES'),
+(9, 'B009', 'S003', '2025-06-03', NULL, 'NO'),
+(10, 'B010', 'S005', '2025-06-07', NULL, 'NO'),
+(11, 'B003', 'S004', '2025-04-15', '2025-05-01', 'YES'),
+(12, 'B001', 'S005', '2025-06-09', NULL, 'NO'),
+(13, 'B002', 'S001', '2025-03-10', '2025-03-24', 'YES'),
+(14, 'B005', 'S002', '2025-04-01', '2025-04-20', 'YES'),
+(15, 'B004', 'S003', '2025-06-01', NULL, 'NO');
