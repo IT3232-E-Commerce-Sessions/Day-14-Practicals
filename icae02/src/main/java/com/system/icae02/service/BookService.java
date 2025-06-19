@@ -15,33 +15,14 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BookService {
-    private final BookRepository bookRepository;
-    private final BorrowRepository borrowRepository;
-    private final StudentRepository studentRepository;
-    
     @Autowired
-    public BookService(BookRepository bookRepository, BorrowRepository borrowRepository, StudentRepository studentRepository) {
-        this.bookRepository = bookRepository;
-        this.borrowRepository = borrowRepository;
-        this.studentRepository=studentRepository;
-    }
-    
-    public List<Book> getBooksByGenre(String genre) {
-        return bookRepository.findByGenre(genre);
-    }
-    
-    public Book getBookById(String id) {
-        return bookRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Book not found with ID: " + id));
-    }
-    
-    public List<Student> getStudentsByBookId(String bookId) {
-        return studentRepository.findStudentsByBookId(bookId);
-    }
-    
-    public int getAvailableCopies(String bookId) {
-        Book book = getBookById(bookId);
-        int borrowedCopies = borrowRepository.countBorrowedCopies(bookId);
-        return book.getCopiesAvailable() - borrowedCopies;
+    public BookRepository bookRepository;
+
+    // Get book by genre
+    public List<Book> getBooksByGenre(String genre){
+        if(bookRepository.getByGenre(genre).isEmpty()){
+            throw new EntityNotFoundException("Books Not Found for mentioned Genre");
+        }
+        return bookRepository.getByGenre(genre);
     }
 }

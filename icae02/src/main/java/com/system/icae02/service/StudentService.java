@@ -1,5 +1,7 @@
 package com.system.icae02.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,22 +13,13 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class StudentService {
-    private final StudentRepository studentRepository;
-    private final BorrowRepository borrowRepository;
-    
     @Autowired
-    public StudentService(StudentRepository studentRepository, BorrowRepository borrowRepository) {
-        this.studentRepository = studentRepository;
-        this.borrowRepository = borrowRepository;
-    }
-    
-    public Student getStudentById(String id) {
-        return studentRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Student not found with ID: " + id));
-    }
-    
-    public boolean canBorrowMoreBooks(String studentId) {
-        int unreturnedCount = borrowRepository.countUnreturnedBooks(studentId);
-        return unreturnedCount < 2;
+    public StudentRepository studentRepository;
+
+    public List<Student> getBorrowedStudent(String bookId){
+        if(studentRepository.getBorrowedStudent(bookId).isEmpty()){
+            throw new EntityNotFoundException("Students Not Found");
+        }
+        return studentRepository.getBorrowedStudent(bookId);
     }
 }

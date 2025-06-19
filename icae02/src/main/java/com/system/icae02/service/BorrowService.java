@@ -1,6 +1,6 @@
 package com.system.icae02.service;
 
-import java.awt.print.Book;
+
 import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,48 +8,55 @@ import org.springframework.stereotype.Service;
 
 import com.system.icae02.model.Borrow;
 import com.system.icae02.model.Student;
+import com.system.icae02.model.Book;
 import com.system.icae02.repository.BookRepository;
 import com.system.icae02.repository.BorrowRepository;
+import com.system.icae02.repository.StudentRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BorrowService {
-    private final BookService bookService;
-    private final StudentService studentService;
-    private final BorrowRepository borrowRepository;
-    private final BookRepository bookRepository;
-    
     @Autowired
-    public BorrowService(BookService bookService, StudentService studentService, 
-                        BorrowRepository borrowRepository, BookRepository bookRepository) {
-        this.bookService = bookService;
-        this.studentService = studentService;
-        this.borrowRepository = borrowRepository;
-        this.bookRepository = bookRepository;
-    }
-    
-    public Borrow borrowBook(String studentId, String bookId) {
+    public BorrowRepository borrowRepository;
 
-        Student student = studentService.getStudentById(studentId);
-        Book book = bookService.getBookById(bookId);
+    @Autowired
+    public BookRepository bookRepository;
 
-        if (!studentService.canBorrowMoreBooks(studentId)) {
-            throw new IllegalStateException("Student has reached the borrowing limit of 2 unreturned books");
+    @Autowired
+    public StudentRepository studentRepository;
+
+    // Add a new Borrow Entry
+    public Borrow addNewEntry(Borrow borrow) {
+        Book book = bookRepository.findById(borrow.getBook().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Book Not Found"));
+
+        Student student = studentRepository.findById(borrow.getStudent().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Student Not Found"));
+
+        // Check available copies
+        if (book.getCopiesAvailable() <= 1) {
+            throw new IllegalStateException("Only one copy left. This must be reserved.");
         }
 
-        int availableCopies = bookService.getAvailableCopies(bookId);
+        // Count unreturned books
+        long unreturnedCount = student.getBorrows().stream()
+                .filter(b -> b.getReturned() == Borrow.Status.NO)
+                .count();
 
-        if (availableCopies <= 1) {
-            throw new IllegalStateException(
-                "Insufficient copies available. Library must maintain at least one copy not for lending"
-            );
+        if (unreturnedCount >= 2) {
+            throw new IllegalStateException("Student already has more than two unreturned books.");
         }
-        
-        // Create borrow record
-        Borrow borrow = new Borrow();
-        borrow.setStudent(student);
+
+        // Proceed to borrow
+        book.setCopiesAvailable(book.getCopiesAvailable() - 1);
+
         borrow.setBook(book);
-        borrow.setBorrowDate(new Date());
-        
+        borrow.setStudent(student);
+        borrow.setBorrowDate(new java.sql.Date(System.currentTimeMillis()));
+        borrow.setReturned(Borrow.Status.NO);
+
         return borrowRepository.save(borrow);
     }
+
 }
