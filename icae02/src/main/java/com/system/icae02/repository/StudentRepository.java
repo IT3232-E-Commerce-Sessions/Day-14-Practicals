@@ -11,6 +11,7 @@ import com.system.icae02.model.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, String> {
-    @Query("SELECT s FROM Student s JOIN s.borrows b WHERE b.book.id = :bookId")
-    List<Student> findStudentsByBookId(@Param("bookId") String bookId);
+	// Get student who borrowed books when given book id
+    @Query("SELECT s from Student s JOIN s.borrows b WHERE b.book.id=?1")
+    public List<Student> getBorrowedStudent(String bookId);
 }
